@@ -3,10 +3,10 @@ name: prefix
 on:
   push:
     paths:
-      - ".github/workflows/prefix.yml"
+      - .github/workflows/prefix.yml
 
 jobs:
-  build:
+  prefix-symbols:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -20,7 +20,10 @@ jobs:
           echo "fn main() {boring_sys2::init(); openssl_sys::init();}" > src/main.rs
       - name: Build without prefixing
         run: |
-          cargo build
+          if cargo build; then
+            echo "Build without prefixing succeeded, should fail.";
+            exit 1;
+          fi
       - name: Build with prefixing
         run: |
           cargo add boring-sys2 --path ../boring-sys/ -F prefix-symbols
