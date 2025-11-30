@@ -22,10 +22,10 @@ jobs:
         id: failing_step
         continue-on-error: true
         run: |
-          cargo build 2>&1 >> $GITHUB_OUTPUT
+          echo "OUTPUT=$(cargo build 2>&1)" >> $GITHUB_OUTPUT
       - name: Check failure
         run: |
-          if [[ "${{ steps.failing_step.outcome }}" != "failure" ]] || [[ ! $(echo "${{ steps.hash.outputs.HASH }}" | grep "rust-lld: error: duplicate symbol") ]]; then
+          if [[ "${{ steps.failing_step.outcome }}" != "failure" ]] || [[ ! $(echo "${{ steps.failing_step.outputs.OUTPUT }}" | grep "rust-lld: error: duplicate symbol") ]]; then
             echo "Build without prefix should have failed."
             exit 1
           fi
