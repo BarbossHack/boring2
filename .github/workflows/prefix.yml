@@ -26,5 +26,6 @@ jobs:
           fi
       - name: Build with prefixing (should not fail)
         run: |
+          pwd
           cargo add boring-sys2 --path ../boring-sys/ -F prefix-symbols
           cargo build
