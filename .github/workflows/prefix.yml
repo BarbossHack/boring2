@@ -1,0 +1,27 @@
+name: prefix
+
+on:
+  push:
+    paths:
+      - ".github/workflows/prefix.yml"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+      - name: Create test project
+        run: |
+          cargo init brssl2-prefix
+          cd brssl2-prefix
+          cargo add boring-sys2 --path ../boring-sys/
+          cargo add openssl-sys -F vendored
+          echo "fn main() {boring_sys2::init(); openssl_sys::init();}" > src/main.rs
+      - name: Build without prefixing
+        run: |
+          cargo build
+      - name: Build with prefixing
+        run: |
+          cargo add boring-sys2 --path ../boring-sys/ -F prefix-symbols
+          cargo build
