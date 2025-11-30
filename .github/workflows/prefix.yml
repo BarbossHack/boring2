@@ -18,13 +18,13 @@ jobs:
           cargo add boring-sys2 --path ../boring-sys/
           cargo add openssl-sys -F vendored
           echo "fn main() {boring_sys2::init(); openssl_sys::init();}" > src/main.rs
-      - name: Build without prefixing
+      - name: Build without prefixing (should fail)
         run: |
-          if cargo build; then
+          if ! cargo build 2>&1 | grep "rust-lld: error: duplicate symbol"; then
             echo "Build without prefixing succeeded, should fail.";
             exit 1;
           fi
-      - name: Build with prefixing
+      - name: Build with prefixing (should not fail)
         run: |
           cargo add boring-sys2 --path ../boring-sys/ -F prefix-symbols
           cargo build
