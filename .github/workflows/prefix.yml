@@ -22,7 +22,9 @@ jobs:
         id: failing_step
         continue-on-error: true
         run: |
-          echo "errors=$(cargo build 2>&1)" >> $GITHUB_OUTPUT
+          errors=$(cargo build 2>&1)
+          echo "$errors"
+          echo "errors=$errors" >> $GITHUB_OUTPUT
       - name: Check failure
         run: |
           echo "${{ steps.failing_step.outputs.errors }}"
