@@ -18,21 +18,13 @@ jobs:
           cargo add boring-sys2 --path ../boring-sys/
           cargo add openssl-sys -F vendored
           echo "fn main() {boring_sys2::init(); openssl_sys::init();}" > src/main.rs
-      - name: Build without prefixing (should fail)
-        id: failing_step
-        continue-on-error: true
+      - name: Build without prefixing
         run: |
-          errors=$(cargo build 2>&1)
-          echo "$errors"
-          echo "errors=$errors" >> $GITHUB_OUTPUT
-      - name: Check failure
-        run: |
-          echo "${{ steps.failing_step.outputs.errors }}"
-          if [[ "${{ steps.failing_step.outcome }}" != "failure" ]] || [[ ! $(echo "${{ steps.failing_step.outputs.errors }}" | grep "rust-lld: error: duplicate symbol") ]]; then
-            echo "Build without prefix should have failed."
-            exit 1
+          if ! cargo build 2>&1 | grep "rust-lld: error: duplicate symbol"; then
+            echo "Build without prefixing succeeded, should fail.";
+            exit 1;
           fi
-      - name: Build with prefixing (should not fail)
+      - name: Build with prefixing
         run: |
           cd brssl2-prefix
           cargo add boring-sys2 --path ../boring-sys/ -F prefix-symbols
