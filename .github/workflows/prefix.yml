@@ -25,7 +25,7 @@ jobs:
           cargo add openssl-sys -F vendored
           echo "fn main() {boring_sys2::init(); openssl_sys::init();}" > src/main.rs
       - name: Prepare Android toolchain
-        if: matrix.target == 'armv7-linux-androideabi'
+        if: contains(matrix.target, 'android')
         run: |
           rustup target add ${{ matrix.target }}
           cargo install cargo-ndk
@@ -37,7 +37,7 @@ jobs:
             exit 1;
           fi
       - name: Android build without prefixing
-        if: matrix.target == 'armv7-linux-androideabi'
+        if: contains(matrix.target, 'android')
         run: |
           if ! cargo ndk -t ${{ matrix.target }} build 2>&1 | grep "lld: error: duplicate symbol"; then
             echo "Build without prefixing succeeded, should fail.";
@@ -53,7 +53,7 @@ jobs:
           pwd
           cargo build
       - name: Android build with prefixing
-        if: matrix.target == 'armv7-linux-androideabi'
+        if: contains(matrix.target, 'android')
         run: |
           pwd
           cargo ndk -t ${{ matrix.target }} build
