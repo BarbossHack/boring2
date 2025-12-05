@@ -39,6 +39,7 @@ jobs:
       - name: Android build without prefixing
         if: matrix.target == 'armv7-linux-androideabi'
         run: |
+          cargo ndk -t ${{ matrix.target }} build
           if ! cargo ndk -t ${{ matrix.target }} build 2>&1 | grep "rust-lld: error: duplicate symbol"; then
             echo "Build without prefixing succeeded, should fail.";
             exit 1;
@@ -48,7 +49,7 @@ jobs:
           cd brssl2-prefix
           cargo add boring-sys2 --path ../boring-sys/ -F prefix-symbols
       - name: Build with prefixing
-        if: matrix.target == 'armv7-linux-androideabi'
+        if: matrix.target == 'stable'
         run: |
           pwd
           cargo build
