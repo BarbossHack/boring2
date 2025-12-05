@@ -35,6 +35,7 @@ jobs:
       - name: Build without prefixing
         if: matrix.target == 'stable'
         run: |
+          cd brssl2-prefix
           if ! cargo build 2>&1 | grep "lld: error: duplicate symbol"; then
             echo "Build without prefixing succeeded, should fail.";
             exit 1;
@@ -42,6 +43,7 @@ jobs:
       - name: Android build without prefixing
         if: contains(matrix.target, 'android')
         run: |
+          cd brssl2-prefix
           if ! cargo ndk -t ${{ matrix.target }} build 2>&1 | grep "lld: error: duplicate symbol"; then
             echo "Build without prefixing succeeded, should fail.";
             exit 1;
@@ -53,10 +55,10 @@ jobs:
       - name: Build with prefixing
         if: matrix.target == 'stable'
         run: |
-          pwd
+          cd brssl2-prefix
           cargo build
       - name: Android build with prefixing
         if: contains(matrix.target, 'android')
         run: |
-          pwd
+          cd brssl2-prefix
           cargo ndk -t ${{ matrix.target }} build
