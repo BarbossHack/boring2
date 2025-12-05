@@ -14,7 +14,7 @@ jobs:
           - stable
           - armv7-linux-androideabi
           - aarch64-linux-android
-          # - i686-linux-android
+          - i686-linux-android
           - x86_64-linux-android
     defaults:
       run:
@@ -25,7 +25,6 @@ jobs:
       - name: Create test project
         working-directory: .
         run: |
-          pwd
           cargo init brssl2-prefix
           cd brssl2-prefix
           cargo add boring-sys2 --path ../boring-sys/
@@ -34,7 +33,6 @@ jobs:
       - name: Prepare Android toolchain
         if: contains(matrix.target, 'android')
         run: |
-          pwd
           rustup target add ${{ matrix.target }}
           cargo install cargo-ndk
       - name: Build without prefixing
@@ -52,13 +50,10 @@ jobs:
             exit 1;
           fi
       - name: Add prefix-symbols feature
-        run: |
-          cargo add boring-sys2 --path ../boring-sys/ -F prefix-symbols
+        run: cargo add boring-sys2 --path ../boring-sys/ -F prefix-symbols
       - name: Build with prefixing
         if: matrix.target == 'stable'
-        run: |
-          cargo build
+        run: cargo build
       - name: Android build with prefixing
         if: contains(matrix.target, 'android')
-        run: |
-          cargo ndk -t ${{ matrix.target }} build
+        run: cargo ndk -t ${{ matrix.target }} build
