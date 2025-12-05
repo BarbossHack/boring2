@@ -25,6 +25,7 @@ jobs:
       - name: Create test project
         working-directory: .
         run: |
+          pwd
           cargo init brssl2-prefix
           cd brssl2-prefix
           cargo add boring-sys2 --path ../boring-sys/
@@ -33,6 +34,7 @@ jobs:
       - name: Prepare Android toolchain
         if: contains(matrix.target, 'android')
         run: |
+          pwd
           rustup target add ${{ matrix.target }}
           cargo install cargo-ndk
       - name: Build without prefixing
