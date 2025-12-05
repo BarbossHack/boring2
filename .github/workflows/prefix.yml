@@ -32,15 +32,14 @@ jobs:
       - name: Build without prefixing
         if: matrix.target == 'stable'
         run: |
-          if ! cargo build 2>&1 | grep "rust-lld: error: duplicate symbol"; then
+          if ! cargo build 2>&1 | grep "lld: error: duplicate symbol"; then
             echo "Build without prefixing succeeded, should fail.";
             exit 1;
           fi
       - name: Android build without prefixing
         if: matrix.target == 'armv7-linux-androideabi'
         run: |
-          cargo ndk -t ${{ matrix.target }} build
-          if ! cargo ndk -t ${{ matrix.target }} build 2>&1 | grep "rust-lld: error: duplicate symbol"; then
+          if ! cargo ndk -t ${{ matrix.target }} build 2>&1 | grep "lld: error: duplicate symbol"; then
             echo "Build without prefixing succeeded, should fail.";
             exit 1;
           fi
