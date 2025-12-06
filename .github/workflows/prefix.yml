@@ -42,14 +42,18 @@ jobs:
         run: |
           rustup target add ${{ matrix.target }}
           cargo install cargo-ndk
+      - name: Prepare Android toolchain
+        if: contains(matrix.target, 'macos')
+        run: |
+          rustup target add ${{ matrix.target }}
       - name: Build without prefixing
         if: ${{ !contains(matrix.target, 'android') }}
         run: |
           rustup toolchain list
-          cargo build
+          cargo build --target ${{ matrix.target }}
           cargo run
           exit 0
-          if ! cargo build 2>&1 | grep "lld: error: duplicate symbol"; then
+          if ! cargo build --target ${{ matrix.target }} 2>&1 | grep "lld: error: duplicate symbol"; then
             echo "Build without prefixing succeeded, should fail.";
             exit 1;
           fi
