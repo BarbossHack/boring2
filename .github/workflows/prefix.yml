@@ -18,6 +18,7 @@ jobs:
           # - i686-linux-android
           # - x86_64-linux-android
           - arm64-macos
+          - x86_64-macos
         include:
           - os: ubuntu-latest
           - target: arm64-macos
