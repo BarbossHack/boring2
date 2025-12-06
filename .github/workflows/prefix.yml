@@ -41,9 +41,11 @@ jobs:
           # - target: x86_64-apple-darwin
           #   os: macos-latest
           #   build: cargo build --target
-          # - target: x86_64-apple-ios
-          #   os: macos-latest
-          #   build: cargo build --target
+          - target: x86_64-apple-ios
+            os: macos-latest
+            build: cargo build --target
+            custom_env:
+              IPHONEOS_DEPLOYMENT_TARGET: 26.1
           - target: aarch64-apple-ios
             os: macos-latest
             build: cargo build --target
@@ -71,9 +73,10 @@ jobs:
         if: contains(matrix.target, 'android')
         run: cargo install cargo-ndk
       - name: Build without prefixing
-        if: ${{ !contains(matrix.target, 'darwin') }}
+        if: ${{ !contains(matrix.target, 'apple') }}
         env: ${{ matrix.custom_env }}
         run: |
+          RC=0
           ${{ matrix.build }} ${{ matrix.target }} >logs 2>&1 || RC=$?
           if [[ $RC == 0 || (! $(cat logs | grep "lld: error: duplicate symbol") && ! $(cat logs | grep "multiple definition of")) ]]; then
             cat logs
@@ -82,6 +85,10 @@ jobs:
           fi
           cat logs
           echo "Failed as expected: $RC"
+      - name: Apple works without prefixing
+        if: contains(matrix.target, 'apple')
+        env: ${{ matrix.custom_env }}
+        run: ${{ matrix.build }} ${{ matrix.target }}
       - name: Add prefix-symbols feature
         run: cargo add boring-sys2 --path ../boring-sys/ -F prefix-symbols
       - name: Build with prefixing
