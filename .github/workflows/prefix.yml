@@ -7,7 +7,7 @@ on:
 
 jobs:
   prefix-symbols:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         target:
@@ -17,6 +17,11 @@ jobs:
           # Openssl issue on i686: https://github.com/rust-openssl/rust-openssl/issues/2163#issuecomment-2692363343
           # - i686-linux-android
           - x86_64-linux-android
+          - arm64-macos
+        include:
+          - os: ubuntu-latest
+          - target: arm64-macos
+            os: macos-latest
     defaults:
       run:
         working-directory: brssl2-prefix
