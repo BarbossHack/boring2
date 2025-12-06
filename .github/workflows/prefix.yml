@@ -70,6 +70,7 @@ jobs:
         uses: actions/checkout@v5
       - name: brew
         run: |
+          brew install binutils
           brew info binutils
           echo END
           exit 9
