@@ -74,13 +74,14 @@ jobs:
         if: ${{ !contains(matrix.target, 'darwin') }}
         env: ${{ matrix.custom_env }}
         run: |
-          ${{ matrix.build }} ${{ matrix.target }} >logs 2>&1 || true
-          if [[ ! $(cat logs | grep "lld: error: duplicate symbol") ]] && [[ ! $(cat logs | grep "multiple definition of") ]]; then
+          ${{ matrix.build }} ${{ matrix.target }} >logs 2>&1 || RC=$?
+          if [[ $RC == 0 || (! $(cat logs | grep "lld: error: duplicate symbol") && ! $(cat logs | grep "multiple definition of")) ]]; then
             cat logs
-            echo "Build without prefixing succeeded, should fail.";
-            exit 1;
+            echo "Build finished without duplicate symbols: $RC"
+            exit 1
           fi
           cat logs
+          echo "Failed as expected: $RC"
       - name: Add prefix-symbols feature
         run: cargo add boring-sys2 --path ../boring-sys/ -F prefix-symbols
       - name: Build with prefixing
