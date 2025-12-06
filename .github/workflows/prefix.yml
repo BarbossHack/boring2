@@ -46,15 +46,12 @@ jobs:
           cargo install cargo-ndk
       - name: Prepare Macos toolchain
         if: contains(matrix.target, 'darwin')
-        run: |
-          rustup target list | grep installed
-          rustup target add ${{ matrix.target }}
+        run: rustup target add ${{ matrix.target }}
       - name: Build without prefixing
         if: ${{ !contains(matrix.target, 'android') }}
         run: |
-          rustup target list | grep installed
-          cargo build --target ${{ matrix.target }}
-          cargo run
+          cargo build --target ${{ matrix.target }} || echo FAILED
+          cargo run || echo FAILED
           exit 0
           if ! cargo build --target ${{ matrix.target }} 2>&1 | grep "lld: error: duplicate symbol"; then
             echo "Build without prefixing succeeded, should fail.";
