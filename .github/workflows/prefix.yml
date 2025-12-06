@@ -47,6 +47,7 @@ jobs:
       - name: Prepare Macos toolchain
         if: contains(matrix.target, 'macos')
         run: |
+          rustup target list | grep installed
           rustup target add ${{ matrix.target }}
       - name: Build without prefixing
         if: ${{ !contains(matrix.target, 'android') }}
