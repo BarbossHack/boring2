@@ -14,6 +14,9 @@ jobs:
           - target: x86_64-unknown-linux-gnu
             os: ubuntu-latest
             build: cargo build --target
+          - target: aarch64-unknown-linux-gnu
+            os: ubuntu-latest
+            build: cargo build --target
           - target: armv7-linux-androideabi
             os: ubuntu-latest
             build: cargo ndk build --target
@@ -31,6 +34,12 @@ jobs:
             os: macos-latest
             build: cargo build --target
           - target: x86_64-apple-darwin
+            os: macos-latest
+            build: cargo build --target
+          - target: x86_64-apple-ios
+            os: macos-latest
+            build: cargo build --target
+          - target: aarch64-apple-ios
             os: macos-latest
             build: cargo build --target
     defaults:
