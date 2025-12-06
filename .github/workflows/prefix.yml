@@ -65,7 +65,7 @@ jobs:
         run: cargo add boring-sys2 --path ../boring-sys/ -F prefix-symbols
       - name: Build with prefixing
         if: ${{ !contains(matrix.target, 'android') }}
-        run: ${{ matrix.build }
+        run: ${{ matrix.build }} ${{ matrix.target }}
       - name: Android build with prefixing
         if: contains(matrix.target, 'android')
-        run: cargo ndk -t ${{ matrix.target }} build
+        run: ${{ matrix.build }} ${{ matrix.target }}
