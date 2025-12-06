@@ -99,3 +99,5 @@ jobs:
       - name: Build with prefixing
         env: ${{ matrix.custom_env }}
         run: ${{ matrix.build }} ${{ matrix.target }}
+      - name: Check that wreq is working
+        run: ./target/debug/prefix-test
