@@ -41,11 +41,11 @@ jobs:
           # - target: x86_64-apple-darwin
           #   os: macos-latest
           #   build: cargo build --target
-          - target: x86_64-apple-ios
-            os: macos-latest
-            build: cargo build --target
-            custom_env:
-              IPHONEOS_DEPLOYMENT_TARGET: 26.1
+          # - target: x86_64-apple-ios
+          #   os: macos-latest
+          #   build: cargo build --target
+          #   custom_env:
+          #     IPHONEOS_DEPLOYMENT_TARGET: 26.1
           - target: aarch64-apple-ios
             os: macos-latest
             build: cargo build --target

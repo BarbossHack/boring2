@@ -546,7 +546,8 @@ fn built_boring_source_path(config: &Config) -> &PathBuf {
                 .define("FIPS", "1");
         }
 
-        if config.features.prefix_symbols && config.target_os != "macos" {
+        if config.features.prefix_symbols && !["macos", "ios"].contains(&config.target_os.as_str())
+        {
             cfg.define("CMAKE_POSITION_INDEPENDENT_CODE", "ON");
         }
 
@@ -577,7 +578,7 @@ fn main() {
     if !config.env.docs_rs {
         emit_link_directives(&config);
     }
-    if config.features.prefix_symbols && config.target_os != "macos" {
+    if config.features.prefix_symbols && !["macos", "ios"].contains(&config.target_os.as_str()) {
         prefix_symbols(&config);
     }
     generate_bindings(&config);
@@ -674,7 +675,7 @@ fn generate_bindings(config: &Config) {
             .clang_arg(sysroot.display().to_string());
     }
 
-    if config.features.prefix_symbols && config.target_os != "macos" {
+    if config.features.prefix_symbols && !["macos", "ios"].contains(&config.target_os.as_str()) {
         builder = builder.parse_callbacks(Box::new(PrefixCallback));
     }
 
