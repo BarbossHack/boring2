@@ -11,7 +11,7 @@ jobs:
     strategy:
       matrix:
         target:
-          - stable-x86_64-unknown-linux-gnu
+          - x86_64-unknown-linux-gnu
           # - armv7-linux-androideabi
           # - aarch64-linux-android
           # Openssl issue on i686: https://github.com/rust-openssl/rust-openssl/issues/2163#issuecomment-2692363343
@@ -51,7 +51,7 @@ jobs:
       - name: Build without prefixing
         if: ${{ !contains(matrix.target, 'android') }}
         run: |
-          rustup toolchain list
+          rustup target list | grep installed
           cargo build --target ${{ matrix.target }}
           cargo run
           exit 0
