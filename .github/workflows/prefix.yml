@@ -75,6 +75,8 @@ jobs:
       - name: brew2
         run: |
           objcopy
+          echo --------------------------------------------------------
+          nm
           exit 10
       - name: Install Rust toolchain
         run: rustup target add ${{ matrix.target }}
