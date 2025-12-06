@@ -66,13 +66,13 @@ jobs:
       run:
         working-directory: .github/prefix-test/
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
       - name: brew
         run: |
           brew info binutils
           echo END
           exit 9
-      - name: Checkout repository
-        uses: actions/checkout@v5
       - name: Install Rust toolchain
         run: rustup target add ${{ matrix.target }}
       - name: Install target-specific APT dependencies
