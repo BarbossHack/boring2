@@ -22,7 +22,7 @@ jobs:
         include:
           - os: ubuntu-latest
             build: cargo build --target
-          - target: armv7-linux-androideabi
+          - target: x86_64-linux-android
             os: ubuntu-latest
             build: cargo ndk build --target
           - target: aarch64-apple-darwin
