@@ -17,6 +17,11 @@ jobs:
           - target: aarch64-unknown-linux-gnu
             os: ubuntu-latest
             build: cargo build --target
+            apt_packages: crossbuild-essential-arm64
+            custom_env:
+              CC_aarch64_unknown_linux_gnu: aarch64-linux-gnu-gcc
+              CXX_aarch64_unknown_linux_gnu: aarch64-linux-gnu-g++
+              CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-g++
           # - target: armv7-linux-androideabi
           #   os: ubuntu-latest
           #   build: cargo ndk build --target
@@ -51,19 +56,21 @@ jobs:
       - name: Initialize
         working-directory: .
         run: |
-          sudo apt update
-          sudo apt-get install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu
           rustup target add ${{ matrix.target }}
           cargo init brssl2-prefix
           cd brssl2-prefix
           cargo add boring-sys2 --path ../boring-sys/
           cargo add openssl-sys -F vendored
           echo "fn main() {boring_sys2::init(); openssl_sys::init();}" > src/main.rs
+      - name: Install target-specific APT dependencies
+        if: "matrix.apt_packages != ''"
+        run: sudo apt update && sudo apt install -y ${{ matrix.apt_packages }}
       - name: Install cargo-ndk
         if: contains(matrix.target, 'android')
         run: cargo install cargo-ndk
       - name: Build without prefixing
         if: ${{ !contains(matrix.target, 'darwin') }}
+        env: ${{ matrix.custom_env }}
         run: |
           ${{ matrix.build }} ${{ matrix.target }}
           echo POUET
@@ -75,4 +82,5 @@ jobs:
       - name: Add prefix-symbols feature
         run: cargo add boring-sys2 --path ../boring-sys/ -F prefix-symbols
       - name: Build with prefixing
+        env: ${{ matrix.custom_env }}
         run: ${{ matrix.build }} ${{ matrix.target }}
