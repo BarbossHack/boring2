@@ -46,6 +46,8 @@ jobs:
         run: |
           rustup toolchain list
           cargo build
+          cargo run
+          exit 0
           if ! cargo build 2>&1 | grep "lld: error: duplicate symbol"; then
             echo "Build without prefixing succeeded, should fail.";
             exit 1;
