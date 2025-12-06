@@ -31,28 +31,21 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
-      - name: Create test project
+      - name: Initialize
         working-directory: .
         run: |
+          rustup target add ${{ matrix.target }}
           cargo init brssl2-prefix
           cd brssl2-prefix
           cargo add boring-sys2 --path ../boring-sys/
           cargo add openssl-sys -F vendored
           echo "fn main() {boring_sys2::init(); openssl_sys::init();}" > src/main.rs
-      - name: Prepare Android toolchain
+      - name: Install cargo-ndk
         if: contains(matrix.target, 'android')
-        run: |
-          rustup target add ${{ matrix.target }}
-          cargo install cargo-ndk
-      - name: Prepare Macos toolchain
-        if: contains(matrix.target, 'darwin')
-        run: rustup target add ${{ matrix.target }}
+        run: cargo install cargo-ndk
       - name: Build without prefixing
         if: ${{ !contains(matrix.target, 'android') }}
         run: |
-          cargo build --target ${{ matrix.target }} || echo FAILED
-          cargo run || echo FAILED
-          exit 0
           if ! cargo build --target ${{ matrix.target }} 2>&1 | grep "lld: error: duplicate symbol"; then
             echo "Build without prefixing succeeded, should fail.";
             exit 1;
@@ -68,7 +61,7 @@ jobs:
         run: cargo add boring-sys2 --path ../boring-sys/ -F prefix-symbols
       - name: Build with prefixing
         if: ${{ !contains(matrix.target, 'android') }}
-        run: cargo build
+        run: cargo build --target ${{ matrix.target }}
       - name: Android build with prefixing
         if: contains(matrix.target, 'android')
         run: cargo ndk -t ${{ matrix.target }} build
