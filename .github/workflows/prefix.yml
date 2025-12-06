@@ -1,5 +1,7 @@
 name: prefix
 
+# FIXME: test with full wreq/libsqlite code
+
 on:
   push:
     paths:
@@ -55,19 +57,19 @@ jobs:
               IPHONEOS_DEPLOYMENT_TARGET: 26.1
     defaults:
       run:
-        working-directory: brssl2-prefix
+        working-directory: .github/prefix-test/
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
       - name: Initialize
-        working-directory: .
+        # working-directory: .
         run: |
           rustup target add ${{ matrix.target }}
-          cargo init brssl2-prefix
-          cd brssl2-prefix
-          cargo add boring-sys2 --path ../boring-sys/
-          cargo add openssl-sys -F vendored
-          echo "fn main() {boring_sys2::init(); openssl_sys::init();}" > src/main.rs
+          # cargo init brssl2-prefix
+          # cd brssl2-prefix
+          # cargo add boring-sys2 --path ../boring-sys/
+          # cargo add openssl-sys -F vendored
+          # echo "fn main() {boring_sys2::init(); openssl_sys::init();}" > src/main.rs
       - name: Install target-specific APT dependencies
         if: matrix.apt_packages != ''
         run: sudo apt update && sudo apt install -y ${{ matrix.apt_packages }}
@@ -92,7 +94,8 @@ jobs:
         env: ${{ matrix.custom_env }}
         run: ${{ matrix.build }} ${{ matrix.target }}
       - name: Add prefix-symbols feature
-        run: cargo add boring-sys2 --path ../boring-sys/ -F prefix-symbols
+        # run: cargo add boring-sys2 --path ../boring-sys/ -F prefix-symbols
+        run: cargo add boring-sys2 --path ../../boring-sys/ -F prefix-symbols
       - name: Build with prefixing
         env: ${{ matrix.custom_env }}
         run: ${{ matrix.build }} ${{ matrix.target }}
