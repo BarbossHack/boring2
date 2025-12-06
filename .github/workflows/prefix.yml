@@ -76,6 +76,7 @@ jobs:
         run: |
           ${{ matrix.build }} ${{ matrix.target }} >logs 2>&1 || true
           if [[ ! $(cat logs | grep "lld: error: duplicate symbol") ]] && [[ ! $(cat logs | grep "multiple definition of") ]]; then
+            cat logs
             echo "Build without prefixing succeeded, should fail.";
             exit 1;
           fi
