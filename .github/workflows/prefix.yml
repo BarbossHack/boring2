@@ -11,11 +11,10 @@ jobs:
     strategy:
       matrix:
         include:
-          - build: cargo build --target
           - custom_env: {}
-          - apt_packages: ""
           - target: x86_64-unknown-linux-gnu
             os: ubuntu-latest
+            build: cargo build --target
           # - target: aarch64-unknown-linux-gnu
           #   os: ubuntu-latest
           #   build: cargo build --target
@@ -39,10 +38,13 @@ jobs:
           #   build: cargo ndk build --target
           - target: aarch64-apple-darwin
             os: macos-latest
+            build: cargo build --target
           - target: x86_64-apple-darwin
             os: macos-latest
+            build: cargo build --target
           - target: aarch64-apple-ios
             os: macos-latest
+            build: cargo build --target
             custom_env:
               IPHONEOS_DEPLOYMENT_TARGET: 26.1
     defaults:
