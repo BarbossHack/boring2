@@ -11,7 +11,8 @@ jobs:
     strategy:
       matrix:
         include:
-          - os: ubuntu-latest
+          - target: x86_64-unknown-linux-gnu
+            os: ubuntu-latest
             build: cargo build --target
           - target: armv7-linux-androideabi
             os: ubuntu-latest
