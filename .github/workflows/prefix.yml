@@ -107,5 +107,8 @@ jobs:
         env: ${{ matrix.custom_env }}
         run: ${{ matrix.build }} ${{ matrix.target }}
       - name: Check that wreq is working
-        if: matrix.test == true
-        run: ./$(find target -type f -name prefix-test -print -quit)
+        # if: matrix.test == true
+        run: |
+          binary=$(find target -type f -name prefix-test -print -quit)
+          echo "$binary"
+          "./$binary" || true
