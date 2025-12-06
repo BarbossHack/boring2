@@ -73,7 +73,7 @@ jobs:
           brew install binutils
           brew info binutils
           echo -----------------------------------------------------------------------
-          export PATH="/opt/homebrew/opt/binutils/bin:$PATH"
+          echo "PATH=/opt/homebrew/opt/binutils/bin:$PATH" >> $GITHUB_ENV
           objcopy
           echo END
           exit 9
