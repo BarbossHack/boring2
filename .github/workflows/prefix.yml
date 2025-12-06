@@ -78,8 +78,7 @@ jobs:
       - name: Install binutils
         if: contains(matrix.target, 'apple')
         run: |
-          brew install binutils
-          brew install llvm
+          brew install binutils llvm lld
           echo "PATH=/opt/homebrew/opt/llvm/bin:/opt/homebrew/opt/binutils/bin:$PATH" >> $GITHUB_ENV
           echo 'RUSTFLAGS="-C relocation-model=pic"' >> $GITHUB_ENV
       - name: Install binutils
