@@ -14,10 +14,12 @@ jobs:
           - target: x86_64-unknown-linux-gnu
             os: ubuntu-latest
             build: cargo build --target
+            test: true
             custom_env: {}
           - target: aarch64-unknown-linux-gnu
             os: ubuntu-latest
             build: cargo build --target
+            test: false
             apt_packages: crossbuild-essential-arm64 binutils-multiarch
             custom_env:
               CC_aarch64_unknown_linux_gnu: aarch64-linux-gnu-gcc
@@ -26,31 +28,38 @@ jobs:
           - target: armv7-linux-androideabi
             os: ubuntu-latest
             build: cargo ndk build --target
+            test: false
             custom_env: {}
           - target: aarch64-linux-android
             os: ubuntu-latest
             build: cargo ndk build --target
+            test: false
             custom_env: {}
           - target: x86_64-linux-android
             os: ubuntu-latest
             build: cargo ndk build --target
+            test: false
             custom_env: {}
           # Openssl issue on i686: https://github.com/rust-openssl/rust-openssl/issues/2163#issuecomment-2692363343
           # - target: i686-linux-android
           #   os: ubuntu-latest
           #   build: cargo ndk build --target
+          #   test: false
           #   custom_env: {}
           - target: aarch64-apple-darwin
             os: macos-latest
             build: cargo build --target
+            test: true
             custom_env: {}
           - target: x86_64-apple-darwin
             os: macos-latest
             build: cargo build --target
+            test: false
             custom_env: {}
           - target: aarch64-apple-ios
             os: macos-latest
             build: cargo build --target
+            test: false
             custom_env:
               IPHONEOS_DEPLOYMENT_TARGET: 26.1
     defaults:
@@ -98,4 +107,5 @@ jobs:
         env: ${{ matrix.custom_env }}
         run: ${{ matrix.build }} ${{ matrix.target }}
       - name: Check that wreq is working
+        if: matrix.test == true
         run: ./$(find target -type f -name prefix-test -print -quit)
