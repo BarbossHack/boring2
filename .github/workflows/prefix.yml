@@ -66,6 +66,11 @@ jobs:
       run:
         working-directory: .github/prefix-test/
     steps:
+      - name: brew
+        run: |
+          brew info binutils
+          echo END
+          exit 9
       - name: Checkout repository
         uses: actions/checkout@v5
       - name: Install Rust toolchain
