@@ -82,7 +82,6 @@ jobs:
           echo "PATH=/opt/homebrew/opt/llvm/bin:/opt/homebrew/opt/binutils/bin:$PATH" >> $GITHUB_ENV
           echo "RUSTFLAGS=-C relocation-model=pic" >> $GITHUB_ENV
           echo "RUSTFLAGS=-C linker=clang -C link-arg=-fuse-ld=lld" >> $GITHUB_ENV
-          echo "RUSTFLAGS=-C link-arg=-Wl,-no_pie" >> $GITHUB_ENV
       - name: Install binutils
         if: contains(matrix.target, 'apple')
         run: |
@@ -111,6 +110,8 @@ jobs:
         run: ${{ matrix.build }} ${{ matrix.target }}
       - name: Add prefix-symbols feature
         run: cargo add boring-sys2 --path ../../boring-sys/ -F prefix-symbols
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
       - name: Build with prefixing
         env: ${{ matrix.custom_env }}
         run: ${{ matrix.build }} ${{ matrix.target }}
