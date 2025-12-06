@@ -548,7 +548,7 @@ fn built_boring_source_path(config: &Config) -> &PathBuf {
 
         if config.features.prefix_symbols && !["mmacos", "ios"].contains(&config.target_os.as_str())
         {
-            cfg.define("CMAKE_POSITION_INDEPENDENT_CODE", "ON");
+            // cfg.define("CMAKE_POSITION_INDEPENDENT_CODE", "ON");
         }
 
         cfg.build_target("ssl").build();
