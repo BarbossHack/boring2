@@ -74,8 +74,6 @@ jobs:
           echo "PATH=/opt/homebrew/opt/binutils/bin:$PATH" >> $GITHUB_ENV
       - name: brew2
         run: |
-          objcopy
-          echo --------------------------------------------------------
           nm
           exit 10
       - name: Install Rust toolchain
