@@ -72,10 +72,8 @@ jobs:
         if: ${{ !contains(matrix.target, 'darwin') }}
         env: ${{ matrix.custom_env }}
         run: |
-          ${{ matrix.build }} ${{ matrix.target }}
-          echo POUET
-          exit 0
-          if ! ${{ matrix.build }} ${{ matrix.target }} 2>&1 | grep "lld: error: duplicate symbol"; then
+          ${{ matrix.build }} ${{ matrix.target }} 2>&1 > logs || true
+          if [[ ! $(cat logs | grep "lld: error: duplicate symbol") ]] && [[ ! $(cat logs | grep "multiple definition of") ]]; then
             echo "Build without prefixing succeeded, should fail.";
             exit 1;
           fi
