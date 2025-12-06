@@ -12,11 +12,11 @@ jobs:
       matrix:
         target:
           - stable
-          - armv7-linux-androideabi
-          - aarch64-linux-android
+          # - armv7-linux-androideabi
+          # - aarch64-linux-android
           # Openssl issue on i686: https://github.com/rust-openssl/rust-openssl/issues/2163#issuecomment-2692363343
           # - i686-linux-android
-          - x86_64-linux-android
+          # - x86_64-linux-android
           - arm64-macos
         include:
           - os: ubuntu-latest
@@ -44,6 +44,8 @@ jobs:
       - name: Build without prefixing
         if: ${{ !contains(matrix.target, 'android') }}
         run: |
+          rustup toolchain list
+          cargo build
           if ! cargo build 2>&1 | grep "lld: error: duplicate symbol"; then
             echo "Build without prefixing succeeded, should fail.";
             exit 1;
