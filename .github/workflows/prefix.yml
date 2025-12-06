@@ -71,12 +71,11 @@ jobs:
       - name: brew
         run: |
           brew install binutils
-          brew info binutils
-          echo -----------------------------------------------------------------------
           echo "PATH=/opt/homebrew/opt/binutils/bin:$PATH" >> $GITHUB_ENV
+      - name: brew2
+        run: |
           objcopy
-          echo END
-          exit 9
+          exit 10
       - name: Install Rust toolchain
         run: rustup target add ${{ matrix.target }}
       - name: Install target-specific APT dependencies
