@@ -42,7 +42,7 @@ jobs:
           rustup target add ${{ matrix.target }}
           cargo install cargo-ndk
       - name: Build without prefixing
-        if: matrix.target == 'stable'
+        if: ! contains(matrix.target, 'android')
         run: |
           if ! cargo build 2>&1 | grep "lld: error: duplicate symbol"; then
             echo "Build without prefixing succeeded, should fail.";
@@ -58,7 +58,7 @@ jobs:
       - name: Add prefix-symbols feature
         run: cargo add boring-sys2 --path ../boring-sys/ -F prefix-symbols
       - name: Build with prefixing
-        if: matrix.target == 'stable'
+        if: ! contains(matrix.target, 'android')
         run: cargo build
       - name: Android build with prefixing
         if: contains(matrix.target, 'android')
