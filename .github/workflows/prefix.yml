@@ -79,8 +79,15 @@ jobs:
         if: contains(matrix.target, 'apple')
         run: |
           brew install binutils
-          echo "PATH=/opt/homebrew/opt/binutils/bin:$PATH" >> $GITHUB_ENV
+          brew install llvm
+          echo "PATH=/opt/homebrew/opt/llvm/bin:/opt/homebrew/opt/binutils/bin:$PATH" >> $GITHUB_ENV
           echo 'RUSTFLAGS="-C relocation-model=pic"' >> $GITHUB_ENV
+      - name: Install binutils
+        if: contains(matrix.target, 'apple')
+        run: |
+          echo $PATH
+          echo $RUSTFLAGS
+          which lld
       - name: Install cargo-ndk
         if: contains(matrix.target, 'android')
         run: cargo install cargo-ndk
