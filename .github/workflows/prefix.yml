@@ -68,19 +68,16 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
-      - name: brew
-        run: |
-          brew install binutils
-          echo "PATH=/opt/homebrew/opt/binutils/bin:$PATH" >> $GITHUB_ENV
-      - name: brew2
-        run: |
-          nm
-          exit 10
       - name: Install Rust toolchain
         run: rustup target add ${{ matrix.target }}
       - name: Install target-specific APT dependencies
         if: matrix.apt_packages != ''
         run: sudo apt update && sudo apt install -y ${{ matrix.apt_packages }}
+      - name: Install binutils
+        if: contains(matrix.target, 'apple')
+        run: |
+          brew install binutils
+          echo "PATH=/opt/homebrew/opt/binutils/bin:$PATH" >> $GITHUB_ENV
       - name: Install cargo-ndk
         if: contains(matrix.target, 'android')
         run: cargo install cargo-ndk
