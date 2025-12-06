@@ -17,13 +17,13 @@ jobs:
           # Openssl issue on i686: https://github.com/rust-openssl/rust-openssl/issues/2163#issuecomment-2692363343
           # - i686-linux-android
           # - x86_64-linux-android
-          - arm64-macos
-          - x86_64-macos
+          - aarch64-apple-darwin
+          - x86_64-apple-darwin
         include:
           - os: ubuntu-latest
-          - target: arm64-macos
+          - target: aarch64-apple-darwin
             os: macos-latest
-          - target: x86_64-macos
+          - target: x86_64-apple-darwin
             os: macos-latest
     defaults:
       run:
@@ -45,7 +45,7 @@ jobs:
           rustup target add ${{ matrix.target }}
           cargo install cargo-ndk
       - name: Prepare Macos toolchain
-        if: contains(matrix.target, 'macos')
+        if: contains(matrix.target, 'darwin')
         run: |
           rustup target list | grep installed
           rustup target add ${{ matrix.target }}
