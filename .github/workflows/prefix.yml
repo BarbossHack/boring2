@@ -1,7 +1,5 @@
 name: prefix
 
-# FIXME: test with full wreq/libsqlite code
-
 on:
   push:
     paths:
@@ -100,4 +98,4 @@ jobs:
         env: ${{ matrix.custom_env }}
         run: ${{ matrix.build }} ${{ matrix.target }}
       - name: Check that wreq is working
-        run: ./target/debug/prefix-test
+        run: ./$(find target -type f -name prefix-test -print -quit)

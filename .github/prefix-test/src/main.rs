@@ -22,11 +22,11 @@ async fn main() -> anyhow::Result<()> {
         .await?
         .text()
         .await?;
-
     assert!(
         res.contains("t13d1516h2_8daaf6152771_d8a2da3f94cd"),
         "{}",
         res
     );
+
     Ok(())
 }
