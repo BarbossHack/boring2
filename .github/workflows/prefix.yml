@@ -72,6 +72,8 @@ jobs:
         run: |
           brew install binutils
           brew info binutils
+          echo -----------------------------------------------------------------------
+          objcopy
           echo END
           exit 9
       - name: Install Rust toolchain
