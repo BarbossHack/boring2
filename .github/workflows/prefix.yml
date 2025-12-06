@@ -14,14 +14,14 @@ jobs:
           # - target: x86_64-unknown-linux-gnu
           #   os: ubuntu-latest
           #   build: cargo build --target
-          - target: aarch64-unknown-linux-gnu
-            os: ubuntu-latest
-            build: cargo build --target
-            apt_packages: crossbuild-essential-arm64
-            custom_env:
-              CC_aarch64_unknown_linux_gnu: aarch64-linux-gnu-gcc
-              CXX_aarch64_unknown_linux_gnu: aarch64-linux-gnu-g++
-              CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-g++
+          # - target: aarch64-unknown-linux-gnu
+          #   os: ubuntu-latest
+          #   build: cargo build --target
+          #   apt_packages: crossbuild-essential-arm64
+          #   custom_env:
+          #     CC_aarch64_unknown_linux_gnu: aarch64-linux-gnu-gcc
+          #     CXX_aarch64_unknown_linux_gnu: aarch64-linux-gnu-g++
+          #     CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-g++
           # - target: armv7-linux-androideabi
           #   os: ubuntu-latest
           #   build: cargo ndk build --target
@@ -44,9 +44,11 @@ jobs:
           # - target: x86_64-apple-ios
           #   os: macos-latest
           #   build: cargo build --target
-          # - target: aarch64-apple-ios
-          #   os: macos-latest
-          #   build: cargo build --target
+          - target: aarch64-apple-ios
+            os: macos-latest
+            build: cargo build --target
+            custom_env:
+              IPHONEOS_DEPLOYMENT_TARGET: 26.1
     defaults:
       run:
         working-directory: brssl2-prefix
