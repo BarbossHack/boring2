@@ -11,9 +11,9 @@ jobs:
     strategy:
       matrix:
         include:
-          # - target: x86_64-unknown-linux-gnu
-          #   os: ubuntu-latest
-          #   build: cargo build --target
+          - target: x86_64-unknown-linux-gnu
+            os: ubuntu-latest
+            build: cargo build --target
           # - target: aarch64-unknown-linux-gnu
           #   os: ubuntu-latest
           #   build: cargo build --target
@@ -22,30 +22,25 @@ jobs:
           #     CC_aarch64_unknown_linux_gnu: aarch64-linux-gnu-gcc
           #     CXX_aarch64_unknown_linux_gnu: aarch64-linux-gnu-g++
           #     CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-g++
-          # - target: armv7-linux-androideabi
-          #   os: ubuntu-latest
-          #   build: cargo ndk build --target
-          # - target: aarch64-linux-android
-          #   os: ubuntu-latest
-          #   build: cargo ndk build --target
-          # - target: x86_64-linux-android
-          #   os: ubuntu-latest
-          #   build: cargo ndk build --target
+          - target: armv7-linux-androideabi
+            os: ubuntu-latest
+            build: cargo ndk build --target
+          - target: aarch64-linux-android
+            os: ubuntu-latest
+            build: cargo ndk build --target
+          - target: x86_64-linux-android
+            os: ubuntu-latest
+            build: cargo ndk build --target
           # Openssl issue on i686: https://github.com/rust-openssl/rust-openssl/issues/2163#issuecomment-2692363343
           # - target: i686-linux-android
           #   os: ubuntu-latest
           #   build: cargo ndk build --target
-          # - target: aarch64-apple-darwin
-          #   os: macos-latest
-          #   build: cargo build --target
-          # - target: x86_64-apple-darwin
-          #   os: macos-latest
-          #   build: cargo build --target
-          # - target: x86_64-apple-ios
-          #   os: macos-latest
-          #   build: cargo build --target
-          #   custom_env:
-          #     IPHONEOS_DEPLOYMENT_TARGET: 26.1
+          - target: aarch64-apple-darwin
+            os: macos-latest
+            build: cargo build --target
+          - target: x86_64-apple-darwin
+            os: macos-latest
+            build: cargo build --target
           - target: aarch64-apple-ios
             os: macos-latest
             build: cargo build --target
