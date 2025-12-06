@@ -73,6 +73,7 @@ jobs:
           brew install binutils
           brew info binutils
           echo -----------------------------------------------------------------------
+          export PATH="/opt/homebrew/opt/binutils/bin:$PATH"
           objcopy
           echo END
           exit 9
