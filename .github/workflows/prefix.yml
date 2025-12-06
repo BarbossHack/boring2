@@ -79,6 +79,7 @@ jobs:
             echo "Build without prefixing succeeded, should fail.";
             exit 1;
           fi
+          cat logs
       - name: Add prefix-symbols feature
         run: cargo add boring-sys2 --path ../boring-sys/ -F prefix-symbols
       - name: Build with prefixing
