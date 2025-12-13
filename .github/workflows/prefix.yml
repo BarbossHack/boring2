@@ -2,8 +2,10 @@ name: prefix
 
 on:
   push:
-    tags: ["v*"]
-  workflow_dispatch:
+    paths:
+      - .github/workflows/prefix.yml
+      - boring-sys/build/main.rs
+      - boring-sys/build/prefix.rs
 
 jobs:
   prefix-symbols:
@@ -45,26 +47,67 @@ jobs:
             bin: ndk
             test: false
             custom_env: {}
+          # - target: aarch64-apple-darwin
+          #   os: macos-latest
+          #   bin: ""
+          #   test: false
+          #   custom_env: {}
+          # - target: x86_64-apple-darwin
+          #   os: macos-latest
+          #   bin: ""
+          #   test: false
+          #   custom_env: {}
+          # - target: aarch64-apple-ios
+          #   os: macos-latest
+          #   bin: ""
+          #   test: false
+          #   custom_env:
+          #     IPHONEOS_DEPLOYMENT_TARGET: 26.1
+          # - target: x86_64-pc-windows-msvc
+          #   os: windows-latest
+          #   bin: ""
+          #   test: true
+          #   custom_env: {}
+          # - target: x86_64-pc-windows-gnu
+          #   os: windows-latest
+          #   bin: ""
+          #   test: true
+          #   custom_env:
+          #     CC: gcc
+          #     CXX: g++
+          #     C_INCLUDE_PATH: "C:\\msys64\\usr\\include"
+          #     CPLUS_INCLUDE_PATH: "C:\\msys64\\usr\\include"
+          #     LIBRARY_PATH: "C:\\msys64\\usr\\lib"
     defaults:
       run:
-        working-directory: test-project
+        working-directory: .github/prefix-test/
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
-      - name: Create test project
-        working-directory: .
+      - name: debug info
+        shell: bash
+        if: contains(matrix.target, 'windows')
         run: |
-          cargo init test-project
-          cd test-project
-          cargo add boring-sys2 --path ../boring-sys/
-          cargo add openssl-sys -F vendored
-          echo "fn main() {boring_sys2::init(); openssl_sys::init();}" > src/main.rs
+          rustup target list | grep installed
+          pwd
+          # cpan Locale::Maketext::Simple
+          # perl -MLocale::Maketext::Simple -e "print qq(Module OK\n)"
+          # echo "PERL=C:/Strawberry/perl/bin/perl.exe" >> $GITHUB_ENV
+          # echo "PATH=C:/Strawberry/perl/bin:$PATH" >> $GITHUB_ENV
       - name: Install Rust toolchain
         shell: bash
         run: rustup target add ${{ matrix.target }}
       - name: Install target-specific APT dependencies
         if: matrix.apt_packages != ''
         run: sudo apt update && sudo apt install -y ${{ matrix.apt_packages }}
+      - name: Install binutils
+        if: contains(matrix.target, 'apple')
+        run: |
+          # FIXME: This is a temporary workaround until we can use a macOS runner
+          brew install binutils llvm lld
+          echo "PATH=/opt/homebrew/opt/llvm/bin:/opt/homebrew/opt/binutils/bin:$PATH" >> $GITHUB_ENV
+          # echo "RUSTFLAGS=-C relocation-model=pic -C linker=clang -C link-arg=-fuse-ld=lld" >> $GITHUB_ENV
+          echo "RUSTFLAGS=-C link-arg=-Wl,-no_compact_unwind" >> $GITHUB_ENV
       - name: Install cargo-ndk
         if: contains(matrix.target, 'android')
         run: |
@@ -75,6 +118,7 @@ jobs:
           echo "ANDROID_NDK_ROOT=$ANDROID_NDK_LATEST_HOME" >> $GITHUB_ENV
           echo "CARGO_TARGET_I686_LINUX_ANDROID_RUSTFLAGS=-C link-arg=-lclang_rt.builtins-i686-android -C link-arg=-L${ANDROID_NDK_LATEST_HOME}/toolchains/llvm/prebuilt/linux-x86_64/lib/clang/21/lib/linux/" >> $GITHUB_ENV
       - name: Build without prefixing
+        if: ${{ !contains(matrix.target, 'apple') }}
         env: ${{ matrix.custom_env }}
         shell: bash
         run: |
@@ -87,9 +131,13 @@ jobs:
           fi
           cat logs
           echo "Failed as expected: $RC"
+      # - name: Apple works without prefixing
+      #   if: contains(matrix.target, 'apple')
+      #   env: ${{ matrix.custom_env }}
+      #   run: ${{ matrix.build }} ${{ matrix.target }}
       - name: Add prefix-symbols feature
         shell: bash
-        run: cargo add boring-sys2 --path ../boring-sys/ -F prefix-symbols
+        run: cargo add boring-sys2 --path ../../boring-sys/ -F prefix-symbols
       - name: Build with prefixing
         env: ${{ matrix.custom_env }}
         shell: bash

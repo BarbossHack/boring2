@@ -61,6 +61,9 @@ underscore-wildcards = []
 # with other OpenSSL or BoringSSL versions that might be linked in the same process.
 prefix-symbols = []
 
+# BarbossHack: or debug only, deps conflicts
+pq-experimental = []
+
 [build-dependencies]
 bindgen = { workspace = true }
 cmake = { workspace = true }
