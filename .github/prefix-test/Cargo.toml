@@ -1,0 +1,19 @@
+[package]
+edition = "2024"
+name = "prefix-test"
+version = "0.1.0"
+
+[workspace]
+
+[dependencies]
+anyhow = "1"
+boring-sys2 = { version = "5.0.0-alpha", path = "../../boring-sys" }
+diesel = { version = "2", features = ["sqlite"] }
+libsqlite3-sys = { version = "0", features = ["bundled-sqlcipher-vendored-openssl"] }
+openssl-sys = { version = "0", features = ["vendored"] }
+tokio = { version = "1", features = ["full"] }
+wreq = "6.0.0-rc"
+wreq-util = "3.0.0-rc"
+
+[patch.crates-io]
+boring-sys2 = { path = "../../boring-sys" }
