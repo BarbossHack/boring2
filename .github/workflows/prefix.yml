@@ -7,6 +7,8 @@ on:
       - boring-sys/build/main.rs
       - boring-sys/build/prefix.rs
 
+# d
+
 jobs:
   prefix-symbols:
     runs-on: ${{ matrix.os }}
